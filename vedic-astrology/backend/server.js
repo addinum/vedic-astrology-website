@@ -12,10 +12,13 @@ const rateLimit = require('express-rate-limit');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errorHandler');
 
-const app = express();
+   const app = express();
 
-// ---- Database ----
-connectDB();
+   // Trust Render's proxy so rate-limiting and IPs work correctly
+   app.set('trust proxy', 1);
+
+   // ---- Database ----
+   connectDB();
 
 // ---- Security & core middleware ----
 app.use(
