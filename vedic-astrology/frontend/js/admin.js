@@ -49,7 +49,8 @@ function loadPanel(panel) {
 // ---------- Overview stats ----------
 async function loadStats() {
   try {
-    const { data } = await api.get('/dashboard/stats');
+    const res = await fetch(`${CONFIG.API_BASE}/api/dashboard/stats`, { headers: { Authorization: `Bearer ${token}` } });
+    const { data } = await res.json();
     const cards = [
       ['Total Services', data.services], ['Total Articles', data.articles],
       ['Testimonials Pending', data.testimonialsPending], ['Reviews Pending', data.reviewsPending],
