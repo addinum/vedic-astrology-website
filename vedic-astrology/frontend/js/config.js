@@ -3,11 +3,11 @@
 // If you host frontend separately (e.g. Netlify) set API_BASE to your Render backend URL.
 const CONFIG = {
   API_BASE: '', // e.g. 'https://your-backend.onrender.com'
-  WHATSAPP_NUMBER: '919999999999', // country code + number, no + or spaces
-  PHONE_NUMBER: '+919999999999',
-  BUSINESS_NAME: 'Pandit Ji Vedic Astrology',
-  BUSINESS_EMAIL: 'contact@panditjiastrology.com',
-  ADDRESS: 'Varanasi, Uttar Pradesh, India'
+  WHATSAPP_NUMBER: '918709162158', // country code + number, no + or spaces
+  PHONE_NUMBER: '+918709162158',
+  BUSINESS_NAME: 'Vedic Astrology',
+  BUSINESS_EMAIL: 'bhupeshmishra48@gmail.com',
+  ADDRESS: 'Bhagalpur, Bihar, India'
 };
 
 function waLink(message) {
