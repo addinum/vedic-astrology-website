@@ -5,7 +5,7 @@ const CONFIG = {
   API_BASE: '', // e.g. 'https://your-backend.onrender.com'
   WHATSAPP_NUMBER: '918709162158', // country code + number, no + or spaces
   PHONE_NUMBER: '+918709162158',
-  BUSINESS_NAME: 'Vedic Astrology',
+  BUSINESS_NAME: 'Bhupesh Mishra Vedic Astrology',
   BUSINESS_EMAIL: 'bhupeshmishra48@gmail.com',
   ADDRESS: 'Bhagalpur, Bihar, India'
 };
