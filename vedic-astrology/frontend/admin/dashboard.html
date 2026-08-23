@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard | Pandit Ji Vedic Astrology</title>
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  body { background: var(--cream); }
+  .admin-shell { display:flex; min-height:100vh; }
+  .admin-sidebar { width:250px; background: var(--maroon-dark); color:#e8d9d0; padding:28px 20px; flex-shrink:0; }
+  .admin-sidebar .brand-mark { width:44px;height:44px;font-size:20px; margin-bottom:10px; }
+  .admin-sidebar h2 { color:var(--gold-light); font-size:17px; margin-bottom:2px; }
+  .admin-sidebar p { font-size:12px; color:#b89f92; margin-bottom:30px; }
+  .admin-nav button { display:flex; align-items:center; gap:10px; width:100%; text-align:left; padding:11px 14px; border-radius:10px; background:none; color:#e8d9d0; font-size:14px; margin-bottom:4px; transition: var(--transition); }
+  .admin-nav button:hover, .admin-nav button.active { background: rgba(255,255,255,0.1); color: var(--gold-light); }
+  .admin-main { flex:1; padding:32px 36px; overflow-x:auto; }
+  .admin-topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:26px; flex-wrap:wrap; gap:14px; }
+  .admin-topbar h1 { font-size:24px; }
+  .stat-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-bottom:30px; }
+  .stat-card { background:var(--white); border-radius:14px; padding:22px; box-shadow:var(--shadow-soft); }
+  .stat-card strong { font-size:26px; display:block; color:var(--maroon); font-family:var(--font-heading); }
+  .stat-card span { font-size:13px; color:var(--text-muted); }
+  .panel { display:none; }
+  .panel.active { display:block; }
+  .data-table { width:100%; border-collapse:collapse; background:var(--white); border-radius:14px; overflow:hidden; box-shadow:var(--shadow-soft); }
+  .data-table th, .data-table td { padding:13px 16px; text-align:left; font-size:13.5px; border-bottom:1px solid var(--cream); }
+  .data-table th { background:var(--gold-light); color:var(--maroon-dark); font-weight:700; }
+  .data-table tr:hover { background:#fffaf1; }
+  .badge { padding:3px 10px; border-radius:20px; font-size:11.5px; font-weight:600; }
+  .badge.yes { background:#e6f7ee; color:#1e7e4c; }
+  .badge.no { background:#fdecea; color:#c0392b; }
+  .badge.status-new { background:#fff3cd; color:#856404; }
+  .row-actions { display:flex; gap:8px; }
+  .row-actions button { padding:6px 12px; border-radius:6px; font-size:12px; }
+  .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; z-index:2000; padding:20px; }
+  .modal-overlay.open { display:flex; }
+  .modal-box { background:var(--white); border-radius:16px; padding:30px; max-width:600px; width:100%; max-height:85vh; overflow-y:auto; }
+  .modal-box h3 { margin-bottom:20px; }
+  .table-toolbar { display:flex; justify-content:space-between; margin-bottom:16px; align-items:center; }
+  @media (max-width: 900px) { .admin-shell { flex-direction:column; } .admin-sidebar { width:100%; } .stat-grid { grid-template-columns:1fr 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="admin-shell">
+  <aside class="admin-sidebar">
+    <div class="brand-mark">🕉</div>
+    <h2>Admin Panel</h2>
+    <p id="adminNameLabel">Welcome</p>
+    <nav class="admin-nav">
+      <button data-panel="overview" class="active">📊 Overview</button>
+      <button data-panel="services">🕉️ Services</button>
+      <button data-panel="testimonials">💬 Testimonials</button>
+      <button data-panel="reviews">⭐ Reviews</button>
+      <button data-panel="articles">📝 Articles</button>
+      <button data-panel="gallery">🖼️ Gallery</button>
+      <button data-panel="panchang">📄 Panchang PDFs</button>
+      <button data-panel="kundali">📜 Kundali Requests</button>
+      <button data-panel="contacts">✉️ Contact Messages</button>
+      <button id="logoutBtn" style="margin-top:20px;color:#ffb3b3;">🚪 Logout</button>
+    </nav>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <h1 id="panelTitle">Overview</h1>
+      <a href="../index.html" target="_blank" class="btn btn-outline btn-sm">View Website ↗</a>
+    </div>
+
+    <!-- Overview -->
+    <section class="panel active" id="panel-overview">
+      <div class="stat-grid" id="statGrid"></div>
+      <p style="color:var(--text-muted);font-size:14px;">Use the menu on the left to manage services, articles, testimonials, gallery images, Panchang PDFs, and incoming leads (Kundali requests & contact messages).</p>
+    </section>
+
+    <!-- Services -->
+    <section class="panel" id="panel-services">
+      <div class="table-toolbar">
+        <p style="color:var(--text-muted);font-size:13.5px;">Manage all Vedic services shown on the website.</p>
+        <button class="btn btn-primary btn-sm" onclick="openServiceModal()">+ Add Service</button>
+      </div>
+      <div style="overflow-x:auto;"><table class="data-table" id="servicesTable"><thead><tr><th>Title</th><th>Category</th><th>Featured</th><th>Active</th><th>Actions</th></tr></thead><tbody></tbody></table></div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="panel" id="panel-testimonials">
+      <div class="table-toolbar">
+        <p style="color:var(--text-muted);font-size:13.5px;">Approve or manage client testimonials.</p>
+        <button class="btn btn-primary btn-sm" onclick="openTestimonialModal()">+ Add Testimonial</button>
+      </div>
+      <div style="overflow-x:auto;"><table class="data-table" id="testimonialsTable"><thead><tr><th>Name</th><th>Rating</th><th>Message</th><th>Approved</th><th>Featured</th><th>Actions</th></tr></thead><tbody></tbody></table></div>
+    </section>
+
+    <!-- Reviews -->
+    <section class="panel" id="panel-reviews">
+      <p style="color:var(--text-muted);font-size:13.5px;margin-bottom:16px;">Approve public reviews submitted via the contact page.</p>
+      <div style="overflow-x:auto;"><table class="data-table" id="reviewsTable"><thead><tr><th>Name</th><th>Rating</th><th>Message</th><th>Approved</th><th>Actions</th></tr></thead><tbody></tbody></table></div>
+    </section>
+
+    <!-- Articles -->
+    <section class="panel" id="panel-articles">
+      <div class="table-toolbar">
+        <p style="color:var(--text-muted);font-size:13.5px;">Manage blog / Knowledge Center articles.</p>
+        <button class="btn btn-primary btn-sm" onclick="openArticleModal()">+ Add Article</button>
+      </div>
+      <div style="overflow-x:auto;"><table class="data-table" id="articlesTable"><thead><tr><th>Title</th><th>Category</th><th>Published</th><th>Date</th><th>Actions</th></tr></thead><tbody></tbody></table></div>
+    </section>
+
+    <!-- Gallery -->
+    <section class="panel" id="panel-gallery">
+      <div class="table-toolbar">
+        <p style="color:var(--text-muted);font-size:13.5px;">Upload and manage gallery photos.</p>
+        <button class="btn btn-primary btn-sm" onclick="openGalleryModal()">+ Upload Image</button>
+      </div>
+      <div style="overflow-x:auto;"><table class="data-table" id="galleryTable"><thead><tr><th>Preview</th><th>Title</th><th>Category</th><th>Active</th><th>Actions</th></tr></thead><tbody></tbody></table></div>
+    </section>
+
+    <!-- Panchang -->
+    <section class="panel" id="panel-panchang">
+      <div class="table-toolbar">
+        <p style="color:var(--text-muted);font-size:13.5px;">Upload monthly Panchang PDF files.</p>
+        <button class="btn btn-primary btn-sm" onclick="openPanchangModal()">+ Upload Panchang</button>
+      </div>
+      <div style="overflow-x:auto;"><table class="data-table" id="panchangTable"><thead><tr><th>Title</th><th>Month/Year</th><th>File</th><th>Actions</th></tr></thead><tbody></tbody></table></div>
+    </section>
+
+    <!-- Kundali Requests -->
+    <section class="panel" id="panel-kundali">
+      <p style="color:var(--text-muted);font-size:13.5px;margin-bottom:16px;">Leads submitted via the Kundali request form.</p>
+      <div style="overflow-x:auto;"><table class="data-table" id="kundaliTable"><thead><tr><th>Name</th><th>Phone</th><th>DOB</th><th>Place</th><th>Service</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table></div>
+    </section>
+
+    <!-- Contacts -->
+    <section class="panel" id="panel-contacts">
+      <p style="color:var(--text-muted);font-size:13.5px;margin-bottom:16px;">Messages submitted via the contact form.</p>
+      <div style="overflow-x:auto;"><table class="data-table" id="contactsTable"><thead><tr><th>Name</th><th>Phone</th><th>Subject</th><th>Message</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table></div>
+    </section>
+  </main>
+</div>
+
+<!-- Generic modal used for Service / Testimonial / Article / Gallery / Panchang forms -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <h3 id="modalTitle">Add Item</h3>
+    <div class="form-msg" id="modalMsg"></div>
+    <form id="modalForm"></form>
+  </div>
+</div>
+
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/admin.js"></script>
+</body>
+</html>
