@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin/
 Disallow: /api/
 
-Sitemap: https://www.panditjiastrology.com/sitemap.xml
+Sitemap: https://www.jyotishsahayta.in/sitemap.xml
